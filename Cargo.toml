@@ -1,0 +1,5 @@
+[package]
+name = "symbolic_polynomials"
+version = "0.0.5"
+authors = ["Alexander Botev <botevmg@gmail.com>"]
+license = "GPLv3"
