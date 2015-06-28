@@ -1,3 +1,7 @@
 language: rust
 rust: beta
 
+after_success:
+        - chmod 775 deploy-ghpages.sh
+        - ./deploy-ghpages.sh
+

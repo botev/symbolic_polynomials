@@ -4,7 +4,3 @@ version = "0.0.5"
 authors = ["Alexander Botev <botevmg@gmail.com>"]
 license = "GPLv3"
 
-after_success:
-	chmod 775 deploy-ghpages.sh
-	./deploy-ghpages.sh
-
