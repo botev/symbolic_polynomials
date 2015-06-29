@@ -1,6 +1,6 @@
 [package]
 name = "symbolic_polynomials"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Alexander Botev <botevmg@gmail.com>"]
 description = "A package for manipulation of symbolic polynomials over the integers"
 documentation = "http://botev.github.io/symbolic_polynomials/index.html"
