@@ -7,7 +7,7 @@ use symbolic_polynomials::SymPolynomial;
 /// In the comments I will refer to them as a and b
 /// in same order, e.g. a-0,b-1
 pub fn example_test(){
-	let a = &SymPolynomial::get_first_order(0,2);
+		let a = &SymPolynomial::get_first_order(0,2);
 	let b = &SymPolynomial::get_first_order(1,2);
 	let a_plus_b = &(a + b);
 	let a_square = &(a*a);
@@ -23,7 +23,7 @@ pub fn example_test(){
 	let a_res = &a_3 / &a_minus_1;
 	assert!(a_res.is_some());
 	assert_eq!(format!("{}", a_res.unwrap()), "X₀²+X₀+1");	
-	let a_3 = &a_3 + 2;
-	let fail = &a_3 / &a_minus_1;
-	assert!(fail.is_none());
+	let a_3_plus_2 = &a_3 + 2;
+	let should_be_none = &a_3_plus_2 / &a_minus_1;
+	assert!(should_be_none.is_none());
 }
