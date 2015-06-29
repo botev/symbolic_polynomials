@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["DEFAULT_VARIABLES","The default number of symbolic variables for now is set 10"]],"struct":[["SymMonomial","An implementation for a monomial over the integers."],["SymPolynomial","A symbolic polynomial over the integers."]]});
