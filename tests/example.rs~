@@ -1,0 +1,8 @@
+extern crate symbolic_polynomials;
+
+use symbolic_polynomials::*;
+
+#[test]
+pub fn example_test(){
+	assert!(true);
+}

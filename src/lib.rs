@@ -12,7 +12,21 @@ use std::fmt::{Display, Formatter, Error};
 use std::cmp::Ordering;
 
 /// The default number of symbolic variables for now is set 10
-const DEFAULT_VARIABLES : usize = 10;
+pub const DEFAULT_VARIABLES : usize = 10;
+
+const SUPER_SCRIPTS: [char; 10] = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'];
+const SUB_SCRIPTS: [char; 10] = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
+
+fn get_super_script(number: usize) -> String{
+	match number{
+		1 => "".to_string(),
+		_ => number.to_string().chars().map(|c| SUPER_SCRIPTS[c.to_string().parse::<usize>().unwrap()]).collect()
+	}	
+}
+
+fn get_sub_script(number: usize) -> String{
+	number.to_string().chars().map(|c| SUB_SCRIPTS[c.to_string().parse::<usize>().unwrap()]).collect()
+}
 
 /// An implementation for a monomial over the integers. 
 #[derive(Clone, Debug)]
@@ -42,7 +56,7 @@ impl SymMonomial{
 	}
 }
 
-/// The default implementation creates a new monomial using the defaultVariables. 
+/// The default implementation creates a new monomial using the `defaultVariables`
 /// Coefficient is initialised to 1.
 impl Default for SymMonomial{
 	fn default() -> Self{ 
@@ -169,8 +183,20 @@ impl Ord for SymMonomial{
 
 impl Display for SymMonomial {
 	fn fmt(&self, f : &mut Formatter) -> Result<(), Error> {
-		let powers = self.powers.iter().map(|p| p.to_string()).collect::<Vec<String>>().connect(", ");
-		write!(f, "{}*[{}]", self.coefficient, powers)
+		let mut string = String::new();
+		for i in 0..self.vars {
+			if self.powers[i] > 0 {
+				string.push_str(&format!("X{}{}",get_sub_script(i),get_super_script(self.powers[i])));
+			}
+		}
+		match self.coefficient{
+			0 => write!(f, "0"),
+			1 => match &string[..] {
+				"" => write!(f, "1"),
+				_ => write!(f, "{}", string),
+			},
+			_ => write!(f, "{}*{}", self.coefficient, string)
+		}
 	}
 }
 
@@ -181,7 +207,7 @@ pub struct SymPolynomial{
 	pub monomials: Vec<SymMonomial>
 }
 
-/// The default implementation creates a new polynoimal using the default_variables. 
+/// The default implementation creates a new polynoimal using the `default_variables`
 impl Default for SymPolynomial{
 	fn default() -> Self{ 
 		return SymPolynomial::new(DEFAULT_VARIABLES)
@@ -336,11 +362,21 @@ impl Eq for SymPolynomial{}
 impl Display for SymPolynomial {
 	fn fmt(&self, f : &mut Formatter) -> Result<(), Error> {
 		if self.monomials.len() == 0 {
-			return write!(f, "{}",0)
+			return write!(f, "0")
 		}
-		for monomial in self.monomials.iter(){
-			let current =  write!(f, "{}+", monomial);
-			if !current.is_ok() {
+		for i in 0..self.monomials.len(){
+			let current = match i {
+				0 => write!(f, "{}", self.monomials[i]),
+				_ => {
+					if self.monomials[i].coefficient >= 0 {
+						write!(f, "+{}", self.monomials[i])
+					}
+					else {
+						write!(f, "{}", self.monomials[i])
+					}
+				}
+			};
+			if current.is_err() {
 				return current
 			}
 		}
@@ -364,9 +400,9 @@ impl<'a> Neg for &'a SymPolynomial{
 	}
 }
 
-/// # Examples
 /// # Panics
 /// If the number of symbolic variables in the two monomials is different
+/// # Examples
 /// ```
 /// # use symbolic_polynomials::*;
 /// // x + x^2 = x^2 + x
